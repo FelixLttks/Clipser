@@ -1,8 +1,12 @@
 import "./App.css";
-import Button from "./components/Button";
+import SearchForm from "./components/SearchForm";
 
 function App() {
-  return <Button></Button>;
+  return (
+    <div className="container">
+      <SearchForm onSubmit={(e) => console.log(e)}></SearchForm>
+    </div>
+  );
 }
 
 export default App;
