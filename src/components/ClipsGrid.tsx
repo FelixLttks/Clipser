@@ -31,6 +31,7 @@ interface Props {
   selectionMode: number;
   selected: boolean[];
   setSelected: (value: boolean[] | ((prevVar: boolean[]) => boolean[])) => void;
+  openInVODMode: boolean;
 }
 
 const ClipsGrid = ({
@@ -41,6 +42,7 @@ const ClipsGrid = ({
   selectionMode,
   selected,
   setSelected,
+  openInVODMode,
 }: Props) => {
   useEffect(() => {
     if (clips.length > selected.length)
@@ -99,7 +101,16 @@ const ClipsGrid = ({
                       ? "card text-decoration-none card-overlay selected"
                       : "card text-decoration-none card-overlay"
                   }
-                  href={multiSelectEnabled ? undefined : clip.url}
+                  href={
+                    multiSelectEnabled
+                      ? undefined
+                      : openInVODMode
+                      ? "https://www.twitch.tv/" +
+                        clip.broadcaster_name +
+                        "/clip/" +
+                        clip.id
+                      : clip.url
+                  }
                   target="_blank"
                   onClick={() => handleSelect(index)}
                 >

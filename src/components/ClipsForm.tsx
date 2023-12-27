@@ -1,4 +1,5 @@
 import ButtonGroup from "./ButtonGroup";
+import { Tooltip } from "./Tooltip";
 
 interface Props {
   multiSelectEnabled: boolean;
@@ -7,6 +8,8 @@ interface Props {
   ) => void;
   selectionMode: number;
   setSelectionMode: (value: number | ((prevVar: number) => number)) => void;
+  openInVODMode: boolean;
+  setOpenInVODMode: (value: boolean | ((prevVar: boolean) => boolean)) => void;
 }
 
 const ClipsForm = ({
@@ -14,6 +17,8 @@ const ClipsForm = ({
   setMultiSelectEnabled,
   selectionMode,
   setSelectionMode,
+  openInVODMode,
+  setOpenInVODMode,
 }: Props) => {
   return (
     <div className="row align-items-center m-3">
@@ -22,9 +27,11 @@ const ClipsForm = ({
       {multiSelectEnabled && (
         <>
           <div className="col-md-auto align-self-end">
-            <button type="button" className="btn btn-primary">
-              Open Selected
-            </button>
+            <Tooltip text="Pop-ups and redirects must be enabled for this site for this feature to work.">
+              <button type="button" className="btn btn-primary">
+                Open Selected
+              </button>
+            </Tooltip>
           </div>
           <div className="col-md-auto p-0 d-flex flex-column align-items-cente">
             <label className="form-label">Selection-Mode</label>
@@ -50,8 +57,8 @@ const ClipsForm = ({
         <label className="form-label">Open</label>
         <ButtonGroup
           items={["Clip", "VOD"]}
-          selected={multiSelectEnabled ? 0 : 1}
-          onChange={(index) => console.log(index)}
+          selected={openInVODMode ? 1 : 0}
+          onChange={(index) => setOpenInVODMode(index == 1)}
         ></ButtonGroup>
       </div>
     </div>

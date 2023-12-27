@@ -33,6 +33,7 @@ const Clips = ({ clips, setClips, searchForm }: Props) => {
   const [multiSelectEnabled, setMultiSelectEnabled] = useState(false);
   const [selectionMode, setSelectionMode] = useState(0);
   const [selected, setSelected] = useState<boolean[]>([]);
+  const [openInVODMode, setOpenInVODMode] = useState(true);
 
   useEffect(() => {
     setSelected([...Array(clips.length).fill(false)]);
@@ -45,6 +46,8 @@ const Clips = ({ clips, setClips, searchForm }: Props) => {
           setMultiSelectEnabled={setMultiSelectEnabled}
           selectionMode={selectionMode}
           setSelectionMode={setSelectionMode}
+          openInVODMode={openInVODMode}
+          setOpenInVODMode={setOpenInVODMode}
         ></ClipsForm>
       )}
       <ClipsGrid
@@ -55,6 +58,7 @@ const Clips = ({ clips, setClips, searchForm }: Props) => {
         selectionMode={selectionMode}
         selected={selected}
         setSelected={setSelected}
+        openInVODMode={openInVODMode}
       ></ClipsGrid>
     </>
   );
