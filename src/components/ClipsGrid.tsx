@@ -64,7 +64,7 @@ const ClipsGrid = ({
                   }
                   href={multiSelectEnabled ? undefined : clip.url}
                   target="_blank"
-                  onClick={(e) =>
+                  onClick={() =>
                     setSelected((prev) => [
                       ...prev.slice(0, index),
                       !selected[index],
