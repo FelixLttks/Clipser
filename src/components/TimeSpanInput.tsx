@@ -75,6 +75,7 @@ const TimeSpanInput = ({
                 className="form-control"
                 type="datetime-local"
                 defaultValue={sevenDaysAgo}
+                onChange={(e) => console.log(e.target.value)}
               />
               <span className="input-group-text" id="basic-addon2">
                 to

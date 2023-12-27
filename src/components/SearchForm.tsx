@@ -14,13 +14,14 @@ let startDate = "";
 let endDate = "";
 
 const SearchForm = ({ onSubmit }: Props) => {
+  // handleSubmit is called when user submits form
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
     const target = event.target as typeof event.target & {
       channelname: { value: string };
-      date: { value: number };
     };
 
+    // give search data back
     onSubmit({
       channelname: target.channelname.value,
       startdate: startDate,
@@ -28,6 +29,7 @@ const SearchForm = ({ onSubmit }: Props) => {
     });
   };
 
+  // handleTimeSpanChnage is called when user changes the selected time span
   const handleTimeSpanChnage = (start: string, end: string) => {
     startDate = start;
     endDate = end;
@@ -35,6 +37,7 @@ const SearchForm = ({ onSubmit }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="m-3">
+      {/* channel name input */}
       <TextInput
         name="channelname"
         groupText="https://www.twitch.tv/"
@@ -43,6 +46,8 @@ const SearchForm = ({ onSubmit }: Props) => {
       >
         Channelname
       </TextInput>
+
+      {/* time span input with predefined buttons + custom selection */}
       <TimeSpanInput
         spans={[
           { text: "24h", value: 24 },
@@ -54,7 +59,9 @@ const SearchForm = ({ onSubmit }: Props) => {
         hasCustom
         onChange={handleTimeSpanChnage}
       ></TimeSpanInput>
-      <input type="submit" value="Submit" className="btn btn-primary" />
+
+      {/* submit button */}
+      <input type="submit" value="Search" className="btn btn-primary" />
     </form>
   );
 };
