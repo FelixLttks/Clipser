@@ -18,16 +18,25 @@ const ClipsForm = ({
   return (
     <div className="row align-items-center m-3">
       <hr className="col m-0 me-3 mt-3"></hr>
+
       {multiSelectEnabled && (
-        <div className="col-md-auto p-0 d-flex flex-column align-items-cente">
-          <label className="form-label">Selection-Mode</label>
-          <ButtonGroup
-            items={["single", "end", "range"]}
-            selected={selectionMode}
-            onChange={(index) => setSelectionMode(index)}
-          ></ButtonGroup>
-        </div>
+        <>
+          <div className="col-md-auto align-self-end">
+            <button type="button" className="btn btn-primary">
+              Open Selected
+            </button>
+          </div>
+          <div className="col-md-auto p-0 d-flex flex-column align-items-cente">
+            <label className="form-label">Selection-Mode</label>
+            <ButtonGroup
+              items={["single", "end", "range"]}
+              selected={selectionMode}
+              onChange={(index) => setSelectionMode(index)}
+            ></ButtonGroup>
+          </div>
+        </>
       )}
+
       <div className="col-md-auto p-0 d-flex flex-column align-items-cente">
         <label className="form-label">Mode</label>
         <ButtonGroup

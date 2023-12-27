@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { searchData } from "../App";
+import TwitchAPI from "../services/TwitchAPI";
 
 type clip = {
   id: string;
@@ -23,6 +25,8 @@ type clip = {
 
 interface Props {
   clips: clip[];
+  setClips: (value: clip[] | ((prevVar: clip[]) => clip[])) => void;
+  searchForm?: searchData;
   multiSelectEnabled: boolean;
   selectionMode: number;
   selected: boolean[];
@@ -31,7 +35,10 @@ interface Props {
 
 const ClipsGrid = ({
   clips,
+  setClips,
+  searchForm,
   multiSelectEnabled,
+  selectionMode,
   selected,
   setSelected,
 }: Props) => {
@@ -43,12 +50,42 @@ const ClipsGrid = ({
       ]);
   }, []);
 
+  const handleSelect = (index: number) => {
+    switch (selectionMode) {
+      case 0:
+        // single
+        setSelected((prev) => [
+          ...prev.slice(0, index),
+          !selected[index],
+          ...prev.slice(index + 1),
+        ]);
+        break;
+      case 1:
+        // single
+        setSelected(() => [
+          ...Array(index).fill(true),
+          !selected[index],
+          ...Array(clips.length - index - 1).fill(false),
+        ]);
+        break;
+      case 2:
+        // TODO: implement range logic
+        break;
+    }
+  };
+
   return (
     <>
       <InfiniteScroll
         dataLength={clips.length}
-        next={() => console.log("next")}
-        hasMore={true}
+        next={() => {
+          console.log("next");
+          searchForm &&
+            TwitchAPI.fetchData(searchForm, false).then((data) =>
+              setClips((prev) => [...prev, ...data.clips])
+            );
+        }}
+        hasMore={searchForm != undefined}
         loader={<h4>Loading...</h4>}
       >
         <div className="container">
@@ -64,13 +101,7 @@ const ClipsGrid = ({
                   }
                   href={multiSelectEnabled ? undefined : clip.url}
                   target="_blank"
-                  onClick={() =>
-                    setSelected((prev) => [
-                      ...prev.slice(0, index),
-                      !selected[index],
-                      ...prev.slice(index + 1),
-                    ])
-                  }
+                  onClick={() => handleSelect(index)}
                 >
                   <img
                     src={clip.thumbnail_url}
@@ -125,65 +156,6 @@ const ClipsGrid = ({
           </div>
         </div>
       </InfiniteScroll>
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-3 col-md-6 mb-4">
-            <a
-              className="card text-decoration-none card-overlay selected"
-              //   href="https://twitch.tv"
-              target="_blank"
-              onClick={(e) => console.log(e)}
-              role="button"
-            >
-              <img
-                src="https://clips-media-assets2.twitch.tv/dZKfFEZSNGVNCmMlAgSQ2Q/AT-cm%7CdZKfFEZSNGVNCmMlAgSQ2Q-preview-480x272.jpg"
-                className="card-img-top"
-                alt="Clip Thumbnail"
-              ></img>
-              <div className="card-body">
-                <h5 className="card-title">WoW für Anfänger</h5>
-                <p className="card-text mb-0">
-                  <small>02/12/2023 18:46:36</small>
-                </p>
-                <p className="card-text mb-0">
-                  <small>by phoenixnico</small>
-                </p>
-                <div className="d-flex justify-content-between align-items-center">
-                  <p className="card-text m-0">
-                    <small>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-eye-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                        <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                      </svg>
-                      <span className="m-2">21017</span>
-                    </small>
-                  </p>
-                  <button type="button" className="btn btn-primary">
-                    Watch
-                  </button>
-                </div>
-              </div>
-              <div className="checkmark">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  className="bi bi-check"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
-                </svg>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
     </>
   );
 };
