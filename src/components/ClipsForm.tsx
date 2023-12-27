@@ -45,6 +45,15 @@ const ClipsForm = ({
           onChange={(index) => setMultiSelectEnabled(index != 1)}
         ></ButtonGroup>
       </div>
+
+      <div className="col-md-auto p-0 d-flex flex-column align-items-cente">
+        <label className="form-label">Open</label>
+        <ButtonGroup
+          items={["Clip", "VOD"]}
+          selected={multiSelectEnabled ? 0 : 1}
+          onChange={(index) => console.log(index)}
+        ></ButtonGroup>
+      </div>
     </div>
   );
 };

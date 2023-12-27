@@ -39,12 +39,14 @@ const Clips = ({ clips, setClips, searchForm }: Props) => {
   }, [multiSelectEnabled, selectionMode]);
   return (
     <>
-      <ClipsForm
-        multiSelectEnabled={multiSelectEnabled}
-        setMultiSelectEnabled={setMultiSelectEnabled}
-        selectionMode={selectionMode}
-        setSelectionMode={setSelectionMode}
-      ></ClipsForm>
+      {searchForm != undefined && (
+        <ClipsForm
+          multiSelectEnabled={multiSelectEnabled}
+          setMultiSelectEnabled={setMultiSelectEnabled}
+          selectionMode={selectionMode}
+          setSelectionMode={setSelectionMode}
+        ></ClipsForm>
+      )}
       <ClipsGrid
         clips={clips}
         setClips={setClips}

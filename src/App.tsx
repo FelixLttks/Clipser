@@ -11,14 +11,12 @@ export type searchData = {
 };
 
 function App() {
-  const [searchSubmitted, setSearchSubmitted] = useState(false);
   const [searchData, setSearchData] = useState<searchData | undefined>(
     undefined
   );
   const [clips, setClips] = useState<clip[]>([]);
 
   const handleSubmit = (data: searchData) => {
-    setSearchSubmitted(true);
     setSearchData(data);
     TwitchAPI.fetchData(data).then((data) => setClips(data.clips));
   };
