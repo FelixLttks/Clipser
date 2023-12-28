@@ -35,3 +35,7 @@
 .card-overlay.selected .checkmark {
   display: block;
 }
+
+.rangeSelection-buttons {
+  z-index: 2;
+}

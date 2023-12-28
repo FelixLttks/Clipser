@@ -35,6 +35,9 @@ interface Props {
   hasMore: boolean;
 }
 
+let leftRangeIndex = 0;
+let rightRangeIndex = 0;
+
 const ClipsGrid = ({
   clips,
   setClips,
@@ -53,6 +56,17 @@ const ClipsGrid = ({
         ...Array(clips.length - selected.length).fill(false),
       ]);
   }, []);
+
+  useEffect(() => {
+    leftRangeIndex = 0;
+    rightRangeIndex = 0;
+  }, [selectionMode]);
+
+  const classNameCard = (index: number) => {
+    let className = "card text-decoration-none card-overlay";
+    if (!selected[index]) return className;
+    return className + " selected";
+  };
 
   const handleSelect = (index: number) => {
     if (!multiSelectEnabled) return;
@@ -74,9 +88,26 @@ const ClipsGrid = ({
         ]);
         break;
       case 2:
-        // TODO: implement range logic
+        // implemented in extra handler
         break;
     }
+  };
+
+  const handleRangeSelect = (isAfterButton: boolean, index: number) => {
+    // update indexes
+    if (isAfterButton) leftRangeIndex = index;
+    else rightRangeIndex = index;
+
+    if (!isAfterButton && rightRangeIndex <= leftRangeIndex) leftRangeIndex = 0;
+
+    rightRangeIndex = Math.max(rightRangeIndex, leftRangeIndex);
+    leftRangeIndex = Math.min(leftRangeIndex, rightRangeIndex);
+
+    setSelected(() => [
+      ...Array(leftRangeIndex).fill(false),
+      ...Array(rightRangeIndex - leftRangeIndex + 1).fill(true),
+      ...Array(clips.length - rightRangeIndex - 1).fill(false),
+    ]);
   };
 
   return (
@@ -115,11 +146,7 @@ const ClipsGrid = ({
                 <div className="col-lg-3 col-md-6 mb-4" key={clip.id}>
                   <a
                     role="button"
-                    className={
-                      selected[index]
-                        ? "card text-decoration-none card-overlay selected"
-                        : "card text-decoration-none card-overlay"
-                    }
+                    className={classNameCard(index)}
                     href={
                       multiSelectEnabled
                         ? undefined
@@ -165,9 +192,39 @@ const ClipsGrid = ({
                             <span className="m-2">{clip.view_count}</span>
                           </small>
                         </p>
-                        <button type="button" className="btn btn-primary">
-                          Watch
-                        </button>
+                        <div
+                          className={
+                            multiSelectEnabled && selectionMode == 2
+                              ? "row gap-2 rangeSelection-buttons"
+                              : "row gap-2"
+                          }
+                        >
+                          <button
+                            type="button"
+                            className="btn btn-primary col"
+                            onClick={() => {
+                              if (multiSelectEnabled && selectionMode == 2)
+                                handleRangeSelect(false, index);
+                            }}
+                          >
+                            {!multiSelectEnabled
+                              ? "Watch"
+                              : selectionMode == 2
+                              ? "Before"
+                              : "Select"}
+                          </button>
+                          {multiSelectEnabled && selectionMode == 2 && (
+                            <button
+                              type="button"
+                              className="btn btn-primary col"
+                              onClick={() => {
+                                handleRangeSelect(true, index);
+                              }}
+                            >
+                              After
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="checkmark">

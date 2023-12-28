@@ -79,6 +79,7 @@ const Clips = ({
           openInVODMode={openInVODMode}
           setOpenInVODMode={setOpenInVODMode}
           onOpenSelectedClick={handleOpenSelectedClick}
+          selectionCount={selected.filter(Boolean).length}
         ></ClipsForm>
       )}
       {!hasError && (

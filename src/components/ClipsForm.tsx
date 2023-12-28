@@ -11,6 +11,7 @@ interface Props {
   openInVODMode: boolean;
   setOpenInVODMode: (value: boolean | ((prevVar: boolean) => boolean)) => void;
   onOpenSelectedClick: () => void;
+  selectionCount: number;
 }
 
 const ClipsForm = ({
@@ -21,6 +22,7 @@ const ClipsForm = ({
   openInVODMode,
   setOpenInVODMode,
   onOpenSelectedClick,
+  selectionCount,
 }: Props) => {
   return (
     <div className="row align-items-center m-3">
@@ -35,7 +37,7 @@ const ClipsForm = ({
                 className="btn btn-primary"
                 onClick={onOpenSelectedClick}
               >
-                Open Selected
+                Open {selectionCount} Selected
               </button>
             </Tooltip>
           </div>
