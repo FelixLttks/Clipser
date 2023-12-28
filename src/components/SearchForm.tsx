@@ -72,10 +72,9 @@ const SearchForm = ({ onSubmit }: Props) => {
           aria-label="select clips loading "
           name="ClipCount"
           onChange={(e) => console.log(e.target.value)}
+          defaultValue={20}
         >
-          <option selected value="20">
-            20
-          </option>
+          <option value="20">20</option>
           <option value="50">50</option>
           <option value="75">75</option>
           <option value="100">100</option>

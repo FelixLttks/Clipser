@@ -10,6 +10,7 @@ interface Props {
   setSelectionMode: (value: number | ((prevVar: number) => number)) => void;
   openInVODMode: boolean;
   setOpenInVODMode: (value: boolean | ((prevVar: boolean) => boolean)) => void;
+  onOpenSelectedClick: () => void;
 }
 
 const ClipsForm = ({
@@ -19,6 +20,7 @@ const ClipsForm = ({
   setSelectionMode,
   openInVODMode,
   setOpenInVODMode,
+  onOpenSelectedClick,
 }: Props) => {
   return (
     <div className="row align-items-center m-3">
@@ -28,7 +30,11 @@ const ClipsForm = ({
         <>
           <div className="col-md-auto align-self-end">
             <Tooltip text="Pop-ups and redirects must be enabled for this site for this feature to work.">
-              <button type="button" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={onOpenSelectedClick}
+              >
                 Open Selected
               </button>
             </Tooltip>

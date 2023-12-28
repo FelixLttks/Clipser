@@ -40,6 +40,26 @@ const Clips = ({ clips, setClips, searchForm, hasError }: Props) => {
     setSelected([...Array(clips.length).fill(false)]);
   }, [multiSelectEnabled, selectionMode, searchForm]);
 
+  const openClip = (index: number) => {
+    let clip = clips[index];
+    if (openInVODMode) {
+      window.open(
+        "https://www.twitch.tv/" + clip.broadcaster_name + "/clip/" + clip.id,
+        "_blank"
+      );
+    } else {
+      window.open(clip.url, "_blank");
+    }
+    console.log(clips[index].title);
+  };
+
+  const handleOpenSelectedClick = () => {
+    selected.forEach((value, index) => {
+      selected[selected.length - index] && openClip(selected.length - index);
+    });
+    console.log("handleOpenSelectedClick");
+  };
+
   return (
     <>
       {searchForm != undefined && (
@@ -50,6 +70,7 @@ const Clips = ({ clips, setClips, searchForm, hasError }: Props) => {
           setSelectionMode={setSelectionMode}
           openInVODMode={openInVODMode}
           setOpenInVODMode={setOpenInVODMode}
+          onOpenSelectedClick={handleOpenSelectedClick}
         ></ClipsForm>
       )}
       <ClipsGrid
