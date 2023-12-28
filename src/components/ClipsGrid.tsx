@@ -53,6 +53,7 @@ const ClipsGrid = ({
   }, []);
 
   const handleSelect = (index: number) => {
+    if (!multiSelectEnabled) return;
     switch (selectionMode) {
       case 0:
         // single
@@ -66,7 +67,7 @@ const ClipsGrid = ({
         // single
         setSelected(() => [
           ...Array(index).fill(true),
-          !selected[index],
+          !selected[index] || selected[index + 1],
           ...Array(clips.length - index - 1).fill(false),
         ]);
         break;
@@ -88,7 +89,16 @@ const ClipsGrid = ({
             );
         }}
         hasMore={searchForm != undefined}
-        loader={<h4>Loading...</h4>}
+        loader={
+          <div className="d-flex justify-content-center">
+            <div
+              className="spinner-border text-primary center m-5"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        }
       >
         <div className="container">
           <div className="row">

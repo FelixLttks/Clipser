@@ -15,16 +15,26 @@ function App() {
     undefined
   );
   const [clips, setClips] = useState<clip[]>([]);
+  const [error, setError] = useState(false);
 
   const handleSubmit = (data: searchData) => {
     setSearchData(data);
-    TwitchAPI.fetchData(data).then((data) => setClips(data.clips));
+    TwitchAPI.fetchData(data).then((data) => {
+      setError(data.error);
+      setClips(data.clips);
+      return;
+    });
   };
 
   return (
     <div className="container">
       <SearchForm onSubmit={handleSubmit}></SearchForm>
-      <Clips clips={clips} setClips={setClips} searchForm={searchData}></Clips>
+      <Clips
+        clips={clips}
+        setClips={setClips}
+        searchForm={searchData}
+        hasError={error}
+      ></Clips>
     </div>
   );
 }

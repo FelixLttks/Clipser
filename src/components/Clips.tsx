@@ -27,9 +27,10 @@ interface Props {
   clips: clip[];
   setClips: (value: clip[] | ((prevVar: clip[]) => clip[])) => void;
   searchForm?: searchData;
+  hasError?: boolean;
 }
 
-const Clips = ({ clips, setClips, searchForm }: Props) => {
+const Clips = ({ clips, setClips, searchForm, hasError }: Props) => {
   const [multiSelectEnabled, setMultiSelectEnabled] = useState(false);
   const [selectionMode, setSelectionMode] = useState(0);
   const [selected, setSelected] = useState<boolean[]>([]);
@@ -53,13 +54,18 @@ const Clips = ({ clips, setClips, searchForm }: Props) => {
       <ClipsGrid
         clips={clips}
         setClips={setClips}
-        searchForm={searchForm}
+        searchForm={hasError ? undefined : searchForm}
         multiSelectEnabled={multiSelectEnabled}
         selectionMode={selectionMode}
         selected={selected}
         setSelected={setSelected}
         openInVODMode={openInVODMode}
       ></ClipsGrid>
+      {hasError && (
+        <div className="d-flex justify-content-center m-5">
+          <p>Error. Maybe you made a typo?</p>
+        </div>
+      )}
     </>
   );
 };

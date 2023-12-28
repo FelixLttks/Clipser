@@ -21,9 +21,10 @@ const fetchData = async (
         return { error: true, clips: [] };
       }
       channelId = data.channelId;
-      return getClips(channelId);
+      return getClips(channelId, searchData.startdate, searchData.enddate);
     });
-  } else return getClips(channelId, true);
+  } else
+    return getClips(channelId, searchData.startdate, searchData.enddate, true);
 };
 
 const getChannelId = async (
@@ -57,11 +58,16 @@ const getChannelId = async (
 
 const getClips = async (
   channelId: string,
+  startDate: string,
+  endDate: string,
   useCursor: boolean = false
 ): Promise<{ error: boolean; clips: clip[] }> => {
   console.log("getting clips", channelId);
-  let url = "";
+  let url =
+    "&started_at=" + startDate + ":00.000Z&ended_at=" + endDate + ":00.000Z";
+  console.log(url);
   if (useCursor) url += "&after=" + cursor;
+
   const clipsResponse = await fetch(
     `https://api.twitch.tv/helix/clips?broadcaster_id=${channelId}${url}`,
     {
