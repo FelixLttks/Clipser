@@ -54,9 +54,10 @@ const Clips = ({ clips, setClips, searchForm, hasError }: Props) => {
   };
 
   const handleOpenSelectedClick = () => {
-    selected.forEach((value, index) => {
-      selected[selected.length - index] && openClip(selected.length - index);
-    });
+    for (let i = selected.length - 1; i >= 0; i--) {
+      selected[i] && openClip(i);
+    }
+
     console.log("handleOpenSelectedClick");
   };
 
