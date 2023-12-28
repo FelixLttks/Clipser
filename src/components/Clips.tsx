@@ -38,7 +38,8 @@ const Clips = ({ clips, setClips, searchForm, hasError }: Props) => {
 
   useEffect(() => {
     setSelected([...Array(clips.length).fill(false)]);
-  }, [multiSelectEnabled, selectionMode]);
+  }, [multiSelectEnabled, selectionMode, searchForm]);
+
   return (
     <>
       {searchForm != undefined && (

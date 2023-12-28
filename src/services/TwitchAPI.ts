@@ -1,10 +1,5 @@
+import { searchData } from "../App";
 import { clip } from "../components/Clips";
-
-type searchData = {
-  channelname: string;
-  startdate: string;
-  enddate: string;
-};
 
 let channelId = "";
 let cursor = "";
@@ -21,10 +16,21 @@ const fetchData = async (
         return { error: true, clips: [] };
       }
       channelId = data.channelId;
-      return getClips(channelId, searchData.startdate, searchData.enddate);
+      return getClips(
+        channelId,
+        searchData.startdate,
+        searchData.enddate,
+        searchData.clipscount
+      );
     });
   } else
-    return getClips(channelId, searchData.startdate, searchData.enddate, true);
+    return getClips(
+      channelId,
+      searchData.startdate,
+      searchData.enddate,
+      searchData.clipscount,
+      true
+    );
 };
 
 const getChannelId = async (
@@ -60,12 +66,18 @@ const getClips = async (
   channelId: string,
   startDate: string,
   endDate: string,
+  clipsCount: string,
   useCursor: boolean = false
 ): Promise<{ error: boolean; clips: clip[] }> => {
   console.log("getting clips", channelId);
   let url =
-    "&started_at=" + startDate + ":00.000Z&ended_at=" + endDate + ":00.000Z";
-  console.log(url);
+    "&started_at=" +
+    startDate +
+    ":00.000Z&ended_at=" +
+    endDate +
+    ":00.000Z&first=" +
+    clipsCount;
+  console.log(url, clipsCount);
   if (useCursor) url += "&after=" + cursor;
 
   const clipsResponse = await fetch(

@@ -1,13 +1,10 @@
 import { SyntheticEvent } from "react";
+import { searchData } from "../App";
 import TextInput from "./TextInput";
 import TimeSpanInput from "./TimeSpanInput";
 
 interface Props {
-  onSubmit: (data: {
-    channelname: string;
-    startdate: string;
-    enddate: string;
-  }) => void;
+  onSubmit: (searchData: searchData) => void;
 }
 
 let startDate = "";
@@ -19,6 +16,7 @@ const SearchForm = ({ onSubmit }: Props) => {
     event.preventDefault();
     const target = event.target as typeof event.target & {
       channelname: { value: string };
+      ClipCount: { value: string };
     };
 
     // give search data back
@@ -26,6 +24,7 @@ const SearchForm = ({ onSubmit }: Props) => {
       channelname: target.channelname.value,
       startdate: startDate,
       enddate: endDate,
+      clipscount: target.ClipCount.value,
     });
   };
 
@@ -60,8 +59,34 @@ const SearchForm = ({ onSubmit }: Props) => {
         onChange={handleTimeSpanChnage}
       ></TimeSpanInput>
 
-      {/* submit button */}
-      <input type="submit" value="Search" className="btn btn-primary" />
+      <div className="row ms-0">
+        {/* submit button */}
+        <input
+          type="submit"
+          value="Search"
+          className="btn btn-primary col-md-auto"
+        />
+
+        <select
+          className="form-select col-md-auto w-auto ms-2"
+          aria-label="select clips loading "
+          name="ClipCount"
+          onChange={(e) => console.log(e.target.value)}
+        >
+          <option selected value="20">
+            20
+          </option>
+          <option value="50">50</option>
+          <option value="75">75</option>
+          <option value="100">100</option>
+        </select>
+        <label
+          htmlFor="ClipCount"
+          className="col-md-auto form-label m-0 d-flex align-items-center"
+        >
+          Clips
+        </label>
+      </div>
     </form>
   );
 };

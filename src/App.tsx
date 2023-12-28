@@ -8,6 +8,7 @@ export type searchData = {
   channelname: string;
   startdate: string;
   enddate: string;
+  clipscount: string;
 };
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
 
   const handleSubmit = (data: searchData) => {
     setSearchData(data);
+    setClips([]);
     TwitchAPI.fetchData(data).then((data) => {
       setError(data.error);
       setClips(data.clips);
