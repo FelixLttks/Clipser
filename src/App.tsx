@@ -33,7 +33,7 @@ function App() {
   };
 
   return (
-    <div className="container">
+    <div className="container pt-4">
       <SearchForm onSubmit={handleSubmit}></SearchForm>
       <Clips
         clips={clips}

@@ -25,7 +25,7 @@ const ClipsForm = ({
   selectionCount,
 }: Props) => {
   return (
-    <div className="row align-items-center m-3">
+    <div className="row align-items-center pb-3 px-3  sticky-top bg-dark">
       <hr className="col m-0 me-3 mt-3"></hr>
 
       {multiSelectEnabled && (
