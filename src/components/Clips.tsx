@@ -28,9 +28,16 @@ interface Props {
   setClips: (value: clip[] | ((prevVar: clip[]) => clip[])) => void;
   searchForm?: searchData;
   hasError?: boolean;
+  hasMoreClips: boolean;
 }
 
-const Clips = ({ clips, setClips, searchForm, hasError }: Props) => {
+const Clips = ({
+  clips,
+  setClips,
+  searchForm,
+  hasError,
+  hasMoreClips = true,
+}: Props) => {
   const [multiSelectEnabled, setMultiSelectEnabled] = useState(false);
   const [selectionMode, setSelectionMode] = useState(0);
   const [selected, setSelected] = useState<boolean[]>([]);
@@ -74,16 +81,19 @@ const Clips = ({ clips, setClips, searchForm, hasError }: Props) => {
           onOpenSelectedClick={handleOpenSelectedClick}
         ></ClipsForm>
       )}
-      <ClipsGrid
-        clips={clips}
-        setClips={setClips}
-        searchForm={hasError ? undefined : searchForm}
-        multiSelectEnabled={multiSelectEnabled}
-        selectionMode={selectionMode}
-        selected={selected}
-        setSelected={setSelected}
-        openInVODMode={openInVODMode}
-      ></ClipsGrid>
+      {!hasError && (
+        <ClipsGrid
+          clips={clips}
+          setClips={setClips}
+          searchForm={hasError ? undefined : searchForm}
+          multiSelectEnabled={multiSelectEnabled}
+          selectionMode={selectionMode}
+          selected={selected}
+          setSelected={setSelected}
+          openInVODMode={openInVODMode}
+          hasMore={hasMoreClips}
+        ></ClipsGrid>
+      )}
       {hasError && (
         <div className="d-flex justify-content-center m-5">
           <p>Error. Maybe you made a typo?</p>

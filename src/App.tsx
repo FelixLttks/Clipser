@@ -17,13 +17,17 @@ function App() {
   );
   const [clips, setClips] = useState<clip[]>([]);
   const [error, setError] = useState(false);
+  const [hasMoreClips, setHasMoreClips] = useState(true);
 
   const handleSubmit = (data: searchData) => {
     setSearchData(data);
+    setHasMoreClips(true);
+    setError(false);
     setClips([]);
     TwitchAPI.fetchData(data).then((data) => {
       setError(data.error);
       setClips(data.clips);
+      setHasMoreClips(data.clips.length != 0);
       return;
     });
   };
@@ -36,6 +40,7 @@ function App() {
         setClips={setClips}
         searchForm={searchData}
         hasError={error}
+        hasMoreClips={hasMoreClips}
       ></Clips>
     </div>
   );

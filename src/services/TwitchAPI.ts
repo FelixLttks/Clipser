@@ -36,7 +36,6 @@ const fetchData = async (
 const getChannelId = async (
   channelName: string
 ): Promise<{ error: boolean; channelId: string }> => {
-  console.log("getting channelId", channelName);
   const userResponse = await fetch(
     `https://api.twitch.tv/helix/users?login=${channelName}`,
     {
@@ -69,7 +68,6 @@ const getClips = async (
   clipsCount: string,
   useCursor: boolean = false
 ): Promise<{ error: boolean; clips: clip[] }> => {
-  console.log("getting clips", channelId);
   let url =
     "&started_at=" +
     startDate +
@@ -77,7 +75,6 @@ const getClips = async (
     endDate +
     ":00.000Z&first=" +
     clipsCount;
-  console.log(url, clipsCount);
   if (useCursor) url += "&after=" + cursor;
 
   const clipsResponse = await fetch(
@@ -95,7 +92,6 @@ const getClips = async (
   }
 
   const clipsData = await clipsResponse.json();
-  console.log(clipsData);
   cursor = clipsData.pagination.cursor;
   return { error: false, clips: clipsData.data };
 };
