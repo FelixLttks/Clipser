@@ -9,17 +9,6 @@ interface Props {
   onChange: (startDate: string, endDate: string) => void;
 }
 
-let startDate = new Date(
-  Date.now() -
-    7 * 24 * 60 * 60 * 1000 -
-    new Date().getTimezoneOffset() * 60 * 1000
-)
-  .toISOString()
-  .slice(0, 16);
-let endDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60 * 1000)
-  .toISOString()
-  .slice(0, 16);
-
 const getTimeByOffset = (hours: number) => {
   return new Date(Date.now() - hours * 60 * 60 * 1000)
     .toISOString()
@@ -34,12 +23,19 @@ const TimeSpanInput = ({
 }: Props) => {
   const [selected, setSelected] = useState(defaultSpan.index);
 
+  let startDate = "";
+  let endDate = "";
+
   if (defaultSpan.index < spans.length) {
     startDate = new Date(
       Date.now() -
         spans[defaultSpan.index].value * 60 * 60 * 1000 -
         new Date().getTimezoneOffset() * 60 * 1000
     )
+      .toISOString()
+      .slice(0, 16);
+
+    endDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60 * 1000)
       .toISOString()
       .slice(0, 16);
   } else {
@@ -68,7 +64,6 @@ const TimeSpanInput = ({
     }
   };
 
-  console.log("rerender", startDate);
   return (
     <>
       <div className="mb-3">

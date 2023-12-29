@@ -55,7 +55,7 @@ const ClipsForm = ({
       <div className="col-md-auto p-0 d-flex flex-column align-items-cente">
         <label className="form-label">Mode</label>
         <ButtonGroup
-          items={["multiselect", "direct select"]}
+          items={["multiselect", "open directly"]}
           selected={multiSelectEnabled ? 0 : 1}
           onChange={(index) => setMultiSelectEnabled(index != 1)}
         ></ButtonGroup>
