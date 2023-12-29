@@ -24,10 +24,10 @@ function App() {
     setHasMoreClips(true);
     setError(false);
     setClips([]);
-    // window.location.search = "q=Papaplatte";
 
     const url = new URL(window.location.toString());
-    url.searchParams.set("test", "123");
+    url.searchParams.set("q", data.channelname);
+    url.searchParams.set("t", data.startdate);
     window.history.pushState({}, "", url);
 
     TwitchAPI.fetchData(data).then((data) => {
