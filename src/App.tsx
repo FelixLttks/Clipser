@@ -24,7 +24,12 @@ function App() {
     setHasMoreClips(true);
     setError(false);
     setClips([]);
-    window.location.search = "q=Papaplatte";
+    // window.location.search = "q=Papaplatte";
+
+    const url = new URL(window.location.toString());
+    url.searchParams.set("test", "123");
+    window.history.pushState({}, "", url);
+
     TwitchAPI.fetchData(data).then((data) => {
       setError(data.error);
       setClips(data.clips);
