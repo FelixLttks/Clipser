@@ -4,12 +4,20 @@ import TextInput from "./TextInput";
 import TimeSpanInput from "./TimeSpanInput";
 
 interface Props {
-  onSubmit: (searchData: searchData) => void;
+  onSubmit: (searchData: searchData, timespan: string) => void;
 }
+
+const timeSpans = [
+  { text: "24h", value: 24, short: "24h" },
+  { text: "7 days", value: 168, short: "7d" },
+  { text: "1 month", value: 720, short: "1m" },
+  { text: "all time", value: 170880, short: "all" },
+];
 
 const queryParameters = new URLSearchParams(window.location.search);
 const channelnameURL = queryParameters.get("q");
 const timespanURL = queryParameters.get("t");
+const clipsCountURL = queryParameters.get("c");
 
 const getDefaultTimespan = (): {
   index: number;
@@ -37,6 +45,7 @@ const getDefaultTimespan = (): {
 
 let startDate = "";
 let endDate = "";
+let spanIndex = getDefaultTimespan().index;
 
 const SearchForm = ({ onSubmit }: Props) => {
   // handleSubmit is called when user submits form
@@ -47,19 +56,25 @@ const SearchForm = ({ onSubmit }: Props) => {
       ClipCount: { value: string };
     };
 
+    console.log(spanIndex);
+
     // give search data back
-    onSubmit({
-      channelname: target.channelname.value,
-      startdate: startDate,
-      enddate: endDate,
-      clipscount: target.ClipCount.value,
-    });
+    onSubmit(
+      {
+        channelname: target.channelname.value,
+        startdate: startDate,
+        enddate: endDate,
+        clipscount: target.ClipCount.value,
+      },
+      spanIndex < timeSpans.length ? timeSpans[spanIndex].short : "custom"
+    );
   };
 
   // handleTimeSpanChnage is called when user changes the selected time span
-  const handleTimeSpanChnage = (start: string, end: string) => {
+  const handleTimeSpanChnage = (start: string, end: string, index: number) => {
     startDate = start;
     endDate = end;
+    spanIndex = index;
   };
 
   return (
@@ -77,12 +92,7 @@ const SearchForm = ({ onSubmit }: Props) => {
 
       {/* time span input with predefined buttons + custom selection */}
       <TimeSpanInput
-        spans={[
-          { text: "24h", value: 24 },
-          { text: "7 days", value: 168 },
-          { text: "1 month", value: 720 },
-          { text: "all time", value: 170880 },
-        ]}
+        spans={timeSpans}
         defaultSpan={getDefaultTimespan()}
         hasCustom
         onChange={handleTimeSpanChnage}
@@ -101,7 +111,7 @@ const SearchForm = ({ onSubmit }: Props) => {
           aria-label="select clips loading "
           name="ClipCount"
           onChange={(e) => console.log(e.target.value)}
-          defaultValue={20}
+          defaultValue={clipsCountURL != undefined ? clipsCountURL : "20"}
         >
           <option value="20">20</option>
           <option value="50">50</option>

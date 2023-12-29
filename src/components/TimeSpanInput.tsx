@@ -6,7 +6,7 @@ interface Props {
   spans: { text: string; value: number }[];
   defaultSpan?: { index: number; startdate: string; enddate: string };
   hasCustom?: boolean;
-  onChange: (startDate: string, endDate: string) => void;
+  onChange: (startDate: string, endDate: string, spanIndex: number) => void;
 }
 
 const getTimeByOffset = (hours: number) => {
@@ -51,7 +51,7 @@ const TimeSpanInput = ({
 
   // when rendered the fist time send default values back once
   useEffect(() => {
-    onChange(startDate, endDate);
+    onChange(startDate, endDate, defaultSpan.index);
   }, []);
 
   const handleChange = (index: number) => {
@@ -59,8 +59,11 @@ const TimeSpanInput = ({
     if (index < spans.length) {
       onChange(
         getTimeByOffset(spans[index].value),
-        new Date().toISOString().slice(0, 16)
+        new Date().toISOString().slice(0, 16),
+        index
       );
+    } else {
+      onChange(startDate, endDate, spans.length);
     }
   };
 
@@ -86,7 +89,7 @@ const TimeSpanInput = ({
                 defaultValue={startDate}
                 onChange={(e) => {
                   startDate = new Date(e).toISOString().slice(0, 16);
-                  onChange(startDate, endDate);
+                  onChange(startDate, endDate, spans.length);
                 }}
               ></DateInput>
               <span className="input-group-text" id="basic-addon2">
@@ -97,7 +100,7 @@ const TimeSpanInput = ({
                 defaultValue={endDate}
                 onChange={(e) => {
                   endDate = new Date(e).toISOString().slice(0, 16);
-                  onChange(startDate, endDate);
+                  onChange(startDate, endDate, spans.length);
                 }}
               ></DateInput>
             </div>

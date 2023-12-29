@@ -19,7 +19,7 @@ function App() {
   const [error, setError] = useState(false);
   const [hasMoreClips, setHasMoreClips] = useState(true);
 
-  const handleSubmit = (data: searchData) => {
+  const handleSubmit = (data: searchData, timespan: string) => {
     setSearchData(data);
     setHasMoreClips(true);
     setError(false);
@@ -27,7 +27,17 @@ function App() {
 
     const url = new URL(window.location.toString());
     url.searchParams.set("q", data.channelname);
-    url.searchParams.set("t", data.startdate);
+    url.searchParams.set("c", data.clipscount);
+    url.searchParams.set("t", timespan);
+
+    if (timespan == "custom") {
+      url.searchParams.set("tstart", data.startdate);
+      url.searchParams.set("tend", data.enddate);
+    } else {
+      url.searchParams.delete("tstart");
+      url.searchParams.delete("tend");
+    }
+
     window.history.pushState({}, "", url);
 
     TwitchAPI.fetchData(data).then((data) => {
