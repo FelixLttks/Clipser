@@ -19,6 +19,8 @@ const channelnameURL = queryParameters.get("q");
 const timespanURL = queryParameters.get("t");
 const clipsCountURL = queryParameters.get("c");
 
+if (channelnameURL != undefined) document.title = channelnameURL + " - Clipser";
+
 const getDefaultTimespan = (): {
   index: number;
   startdate: string;

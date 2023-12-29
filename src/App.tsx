@@ -25,6 +25,8 @@ function App() {
     setError(false);
     setClips([]);
 
+    document.title = data.channelname + " - Clipser";
+
     const url = new URL(window.location.toString());
     url.searchParams.set("q", data.channelname);
     url.searchParams.set("c", data.clipscount);
