@@ -24,6 +24,7 @@ function App() {
     setHasMoreClips(true);
     setError(false);
     setClips([]);
+    window.location.search = "q=Papaplatte";
     TwitchAPI.fetchData(data).then((data) => {
       setError(data.error);
       setClips(data.clips);
