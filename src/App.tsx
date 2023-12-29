@@ -11,6 +11,12 @@ export type searchData = {
   clipscount: string;
 };
 
+const queryParameters = new URLSearchParams(window.location.search);
+const type = queryParameters.get("type");
+const name = queryParameters.get("name");
+
+console.log(type, name);
+
 function App() {
   const [searchData, setSearchData] = useState<searchData | undefined>(
     undefined
