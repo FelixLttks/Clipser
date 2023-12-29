@@ -7,6 +7,34 @@ interface Props {
   onSubmit: (searchData: searchData) => void;
 }
 
+const queryParameters = new URLSearchParams(window.location.search);
+const channelnameURL = queryParameters.get("q");
+const timespanURL = queryParameters.get("t");
+
+const getDefaultTimespan = (): {
+  index: number;
+  startdate: string;
+  enddate: string;
+} => {
+  switch (timespanURL) {
+    case "24h":
+      return { index: 0, startdate: "", enddate: "" };
+    case "7d":
+      return { index: 1, startdate: "", enddate: "" };
+    case "1m":
+      return { index: 2, startdate: "", enddate: "" };
+    case "all":
+      return { index: 3, startdate: "", enddate: "" };
+    case "custom":
+      const startDateURL = queryParameters.get("tstart") || "";
+      const startEndURL = queryParameters.get("tend") || "";
+
+      return { index: 4, startdate: startDateURL, enddate: startEndURL };
+    default:
+      return { index: 1, startdate: "", enddate: "" };
+  }
+};
+
 let startDate = "";
 let endDate = "";
 
@@ -41,6 +69,7 @@ const SearchForm = ({ onSubmit }: Props) => {
         name="channelname"
         groupText="https://www.twitch.tv/"
         required
+        defaultValue={channelnameURL ? channelnameURL : ""}
         autocomplete={false}
       >
         Channelname
@@ -54,7 +83,7 @@ const SearchForm = ({ onSubmit }: Props) => {
           { text: "1 month", value: 720 },
           { text: "all time", value: 170880 },
         ]}
-        defaultSpanIndex={1}
+        defaultSpan={getDefaultTimespan()}
         hasCustom
         onChange={handleTimeSpanChnage}
       ></TimeSpanInput>

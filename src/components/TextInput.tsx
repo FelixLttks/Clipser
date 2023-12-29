@@ -29,7 +29,7 @@ const TextInput = ({
         placeholder={children}
         aria-label={children}
         aria-describedby="basic-addon1"
-        value={defaultValue}
+        defaultValue={defaultValue}
         required={required}
         autoComplete={autocomplete ? "on" : "off"}
       ></input>

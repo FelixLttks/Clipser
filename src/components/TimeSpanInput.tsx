@@ -4,7 +4,7 @@ import DateInput from "./DateInput";
 
 interface Props {
   spans: { text: string; value: number }[];
-  defaultSpanIndex?: number;
+  defaultSpan?: { index: number; startdate: string; enddate: string };
   hasCustom?: boolean;
   onChange: (startDate: string, endDate: string) => void;
 }
@@ -28,18 +28,34 @@ const getTimeByOffset = (hours: number) => {
 
 const TimeSpanInput = ({
   spans,
-  defaultSpanIndex = 0,
+  defaultSpan = { index: 1, startdate: "", enddate: "" },
   hasCustom = false,
   onChange,
 }: Props) => {
-  const [selected, setSelected] = useState(defaultSpanIndex);
+  const [selected, setSelected] = useState(defaultSpan.index);
+
+  if (defaultSpan.index < spans.length) {
+    startDate = new Date(
+      Date.now() -
+        spans[defaultSpan.index].value * 60 * 60 * 1000 -
+        new Date().getTimezoneOffset() * 60 * 1000
+    )
+      .toISOString()
+      .slice(0, 16);
+  } else {
+    console.log("custom date", defaultSpan);
+    console.log(startDate, defaultSpan.startdate);
+    console.log(new Date(defaultSpan.startdate + ":00.000Z"));
+
+    if (defaultSpan.startdate != "") startDate = defaultSpan.startdate;
+    if (defaultSpan.enddate != "") endDate = defaultSpan.enddate;
+
+    console.log(startDate);
+  }
 
   // when rendered the fist time send default values back once
   useEffect(() => {
-    onChange(
-      new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16),
-      new Date().toISOString().slice(0, 16)
-    );
+    onChange(startDate, endDate);
   }, []);
 
   const handleChange = (index: number) => {
@@ -52,6 +68,7 @@ const TimeSpanInput = ({
     }
   };
 
+  console.log("rerender", startDate);
   return (
     <>
       <div className="mb-3">
