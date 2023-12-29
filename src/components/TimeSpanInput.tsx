@@ -9,11 +9,26 @@ interface Props {
   onChange: (startDate: string, endDate: string, spanIndex: number) => void;
 }
 
-const getTimeByOffset = (hours: number) => {
-  return new Date(Date.now() - hours * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 16);
+// return string formatted as yyyy-mm-ddThh:mm
+const covertUTCLocalTime = (utc: string) => {
+  // console.log("convering utc to local", utc);
+  const utcDate = new Date(utc + "Z");
+  const localDate = new Date(
+    utcDate.getTime() - utcDate.getTimezoneOffset() * 60000
+  );
+  const localTimeString = localDate.toISOString().slice(0, 16);
+
+  return localTimeString;
 };
+
+// return string formatted as yyyy-mm-ddThh:mm
+const covertLocalUTCTime = (local: string) => {
+  const utcTimeString = new Date(local).toISOString().slice(0, 16);
+  return utcTimeString;
+};
+
+let startDate = ""; // UTC
+let endDate = ""; // UTC
 
 const TimeSpanInput = ({
   spans,
@@ -21,51 +36,46 @@ const TimeSpanInput = ({
   hasCustom = false,
   onChange,
 }: Props) => {
-  const [selected, setSelected] = useState(defaultSpan.index);
+  const [selected, setSelected] = useState(defaultSpan.index); // index of selected timespan
 
-  let startDate = "";
-  let endDate = "";
-
-  if (defaultSpan.index < spans.length) {
-    startDate = new Date(
-      Date.now() -
-        spans[defaultSpan.index].value * 60 * 60 * 1000 -
-        new Date().getTimezoneOffset() * 60 * 1000
-    )
-      .toISOString()
-      .slice(0, 16);
-
-    endDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60 * 1000)
-      .toISOString()
-      .slice(0, 16);
-  } else {
-    console.log("custom date", defaultSpan);
-    console.log(startDate, defaultSpan.startdate);
-    console.log(new Date(defaultSpan.startdate + ":00.000Z"));
-
-    if (defaultSpan.startdate != "") startDate = defaultSpan.startdate;
-    if (defaultSpan.enddate != "") endDate = defaultSpan.enddate;
-
-    console.log(startDate);
-  }
-
-  // when rendered the fist time send default values back once
   useEffect(() => {
-    onChange(startDate, endDate, defaultSpan.index);
+    onChange(startDate, endDate, selected);
   }, []);
 
-  const handleChange = (index: number) => {
-    setSelected(index);
-    if (index < spans.length) {
-      onChange(
-        getTimeByOffset(spans[index].value),
-        new Date().toISOString().slice(0, 16),
-        index
-      );
-    } else {
-      onChange(startDate, endDate, spans.length);
+  if (startDate == "" || endDate == "") {
+    if (defaultSpan.index >= spans.length) {
+      // custom timespan
+      if (defaultSpan.startdate != "") {
+        startDate = defaultSpan.startdate;
+      } else {
+        startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days
+          .toISOString()
+          .slice(0, 16);
+      }
+      if (defaultSpan.enddate != "") {
+        endDate = defaultSpan.enddate;
+      } else {
+        endDate = new Date().toISOString().slice(0, 16);
+      }
     }
+  }
+
+  const handleIndexChange = (index: number) => {
+    if (index < spans.length) {
+      // do not calculate time here, search button may be triggered later
+      onChange("", "", index);
+    } else {
+      startDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days
+        .toISOString()
+        .slice(0, 16);
+      endDate = new Date().toISOString().slice(0, 16);
+      onChange(startDate, endDate, spans.length);
+      console.log(startDate);
+    }
+    setSelected(index);
   };
+
+  console.log(startDate);
 
   return (
     <>
@@ -80,15 +90,15 @@ const TimeSpanInput = ({
               ...(hasCustom ? ["Custom"] : []),
             ]}
             selected={selected}
-            onChange={handleChange}
+            onChange={handleIndexChange}
           ></ButtonGroup>
           {selected === spans.length && (
             <div className="input-group">
               <DateInput
                 type="datetime-local"
-                defaultValue={startDate}
-                onChange={(e) => {
-                  startDate = new Date(e).toISOString().slice(0, 16);
+                defaultValue={covertUTCLocalTime(startDate)}
+                onChange={(local) => {
+                  startDate = covertLocalUTCTime(local);
                   onChange(startDate, endDate, spans.length);
                 }}
               ></DateInput>
@@ -97,9 +107,9 @@ const TimeSpanInput = ({
               </span>
               <DateInput
                 type="datetime-local"
-                defaultValue={endDate}
-                onChange={(e) => {
-                  endDate = new Date(e).toISOString().slice(0, 16);
+                defaultValue={covertUTCLocalTime(endDate)}
+                onChange={(local) => {
+                  endDate = covertLocalUTCTime(local);
                   onChange(startDate, endDate, spans.length);
                 }}
               ></DateInput>

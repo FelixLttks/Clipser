@@ -170,6 +170,8 @@ const ClipsGrid = ({
                       <p className="card-text mb-0">
                         <small>
                           {new Date(clip.created_at).toLocaleString()}
+                          <br></br>
+                          {clip.created_at}
                         </small>
                       </p>
                       <p className="card-text mb-0">

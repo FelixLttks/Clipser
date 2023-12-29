@@ -57,6 +57,14 @@ const SearchForm = ({ onSubmit }: Props) => {
     };
 
     console.log(spanIndex);
+    if (spanIndex < timeSpans.length) {
+      startDate = new Date(
+        Date.now() - timeSpans[spanIndex].value * 60 * 60 * 1000
+      )
+        .toISOString()
+        .slice(0, 16);
+      endDate = new Date().toISOString().slice(0, 16);
+    }
 
     // give search data back
     onSubmit(
