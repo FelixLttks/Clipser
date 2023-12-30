@@ -1,6 +1,6 @@
 # Clipser.me
 
-availible on [Clipser.me]()
+availible on [Clipser.me](https://Clipser.me)
 
 ## About
 
