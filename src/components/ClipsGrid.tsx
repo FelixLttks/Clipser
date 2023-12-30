@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { searchData } from "../App";
 import TwitchAPI from "../services/TwitchAPI";
@@ -20,6 +20,8 @@ interface Props {
 let leftRangeIndex = 0;
 let rightRangeIndex = 0;
 
+let hasMoreClipsAfterLoadNext = true;
+
 const ClipsGrid = ({
   clips,
   setClips,
@@ -31,6 +33,8 @@ const ClipsGrid = ({
   openInVODMode,
   hasMore,
 }: Props) => {
+  const [profilePicUrl, setProfilePicUrl] = useState("./twitchprofile.png");
+
   // fill up selection array
   useEffect(() => {
     if (clips.length > selected.length)
@@ -45,6 +49,18 @@ const ClipsGrid = ({
     leftRangeIndex = 0;
     rightRangeIndex = 0;
   }, [selectionMode]);
+
+  useEffect(() => {
+    if (!hasMore || !hasMoreClipsAfterLoadNext) {
+      TwitchAPI.getChannelInfo(searchForm?.channelname || "").then((data) => {
+        console.log(data);
+        if (data != undefined) setProfilePicUrl(data.profile_image_url);
+        return;
+      });
+    } else {
+      setProfilePicUrl("./twitchprofile.png");
+    }
+  }, [hasMore, hasMoreClipsAfterLoadNext]);
 
   // appends selected on selcted cards
   const classNameCard = (index: number) => {
@@ -107,10 +123,11 @@ const ClipsGrid = ({
       next={() => {
         TwitchAPI.fetchData(searchForm, false).then((data) => {
           // update clips
+          hasMoreClipsAfterLoadNext = data.hasMore;
           setClips((prev) => [...prev, ...data.clips]);
         });
       }}
-      hasMore={hasMore}
+      hasMore={hasMore && hasMoreClipsAfterLoadNext}
       loader={
         <div className="d-flex justify-content-center">
           <div className="spinner-border text-primary center m-5" role="status">
@@ -119,8 +136,21 @@ const ClipsGrid = ({
         </div>
       }
       endMessage={
-        <div className="d-flex justify-content-center m-5">
-          <p>No clips found.</p>
+        <div className="d-flex justify-content-center flex-column align-items-center m-5">
+          <p>No clips found for the channel</p>
+
+          <div>
+            <div className="row d-flex justify-content-center align-items-center">
+              <img
+                src={profilePicUrl}
+                alt=""
+                width="36"
+                height="36"
+                className="col-md-auto rounded-circle p-0"
+              />
+              <p className="col-md-auto m-0">{searchForm.channelname}</p>
+            </div>
+          </div>
         </div>
       }
     >

@@ -48,7 +48,7 @@ function App() {
     TwitchAPI.fetchData(data).then((data) => {
       setError(data.error);
       setClips(data.clips);
-      setHasMoreClips(data.clips.length != 0);
+      setHasMoreClips(data.clips.length != 0 && data.hasMore);
       return;
     });
   };

@@ -18,7 +18,7 @@ const TextInput = ({
   return (
     <div className="input-group mb-3">
       {groupText != undefined && (
-        <span className="input-group-text" id="basic-addon1">
+        <span className="input-group-text" id="twitchUrl">
           {groupText}
         </span>
       )}

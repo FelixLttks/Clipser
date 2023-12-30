@@ -7,13 +7,13 @@ let cursor = "";
 const fetchData = async (
   searchData: searchData,
   newSearch: boolean = true
-): Promise<{ error: boolean; clips: clip[] }> => {
+): Promise<{ error: boolean; clips: clip[]; hasMore: boolean }> => {
   console.log("fetchData", searchData);
   if (newSearch || channelId === "") {
     cursor = "";
     return await getChannelId(searchData.channelname).then((data) => {
       if (data.error) {
-        return { error: true, clips: [] };
+        return { error: true, clips: [], hasMore: false };
       }
       channelId = data.channelId;
       return getClips(
@@ -21,21 +21,37 @@ const fetchData = async (
         searchData.startdate,
         searchData.enddate,
         searchData.clipscount
-      );
+      ).then((data) => {
+        return { ...data, hasMore: cursor != undefined };
+      });
     });
-  } else
+  } else {
     return getClips(
       channelId,
       searchData.startdate,
       searchData.enddate,
       searchData.clipscount,
       true
-    );
+    ).then((data) => {
+      return { ...data, hasMore: cursor != undefined };
+    });
+  }
 };
 
-const getChannelId = async (
+const getChannelInfo = async (
   channelName: string
-): Promise<{ error: boolean; channelId: string }> => {
+): Promise<{
+  id: string;
+  login: string;
+  display_name: string;
+  type: string;
+  broadcaster_type: string;
+  description: string;
+  profile_image_url: string;
+  offline_image_url: string;
+  view_count: number;
+  created_at: string;
+}> => {
   const userResponse = await fetch(
     `https://api.twitch.tv/helix/users?login=${channelName}`,
     {
@@ -48,11 +64,30 @@ const getChannelId = async (
   );
 
   if (!userResponse.ok) {
-    return { error: true, channelId: "" };
+    return {
+      id: "",
+      login: "",
+      display_name: "",
+      type: "",
+      broadcaster_type: "",
+      description: "",
+      profile_image_url: "",
+      offline_image_url: "",
+      view_count: 0,
+      created_at: "",
+    };
   }
 
   const userData = await userResponse.json();
-  const channelId = userData.data[0]?.id;
+  return userData.data[0];
+};
+
+const getChannelId = async (
+  channelName: string
+): Promise<{ error: boolean; channelId: string }> => {
+  const userData = await getChannelInfo(channelName);
+
+  const channelId = userData.id;
 
   if (!channelId) {
     return { error: true, channelId: "" };
@@ -98,6 +133,7 @@ const getClips = async (
 
 const TwitchAPI = {
   fetchData,
+  getChannelInfo,
 };
 
 export default TwitchAPI;
