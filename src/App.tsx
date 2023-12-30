@@ -19,6 +19,7 @@ function App() {
   const [error, setError] = useState(false);
   const [hasMoreClips, setHasMoreClips] = useState(true);
 
+  // timespan as short version of selected
   const handleSubmit = (data: searchData, timespan: string) => {
     setSearchData(data);
     setHasMoreClips(true);
@@ -27,6 +28,7 @@ function App() {
 
     document.title = data.channelname + " - Clipser";
 
+    // update url params
     const url = new URL(window.location.toString());
     url.searchParams.set("q", data.channelname);
     url.searchParams.set("c", data.clipscount);
@@ -42,6 +44,7 @@ function App() {
 
     window.history.pushState({}, "", url);
 
+    // get clips
     TwitchAPI.fetchData(data).then((data) => {
       setError(data.error);
       setClips(data.clips);

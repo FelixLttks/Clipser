@@ -14,10 +14,11 @@ const timeSpans = [
   { text: "all time", value: 170880, short: "all" },
 ];
 
+// getting url params for default values
 const queryParameters = new URLSearchParams(window.location.search);
-const channelnameURL = queryParameters.get("q");
-const timespanURL = queryParameters.get("t");
-const clipsCountURL = queryParameters.get("c");
+const channelnameURL = queryParameters.get("q"); // channelname
+const timespanURL = queryParameters.get("t"); // timespan (short version)
+const clipsCountURL = queryParameters.get("c"); // clips count
 
 if (channelnameURL != undefined) document.title = channelnameURL + " - Clipser";
 
@@ -53,12 +54,13 @@ const SearchForm = ({ onSubmit }: Props) => {
   // handleSubmit is called when user submits form
   const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
+
     const target = event.target as typeof event.target & {
       channelname: { value: string };
       ClipCount: { value: string };
     };
 
-    console.log(spanIndex);
+    // when predefined time span is selected calculate the corresponding dates
     if (spanIndex < timeSpans.length) {
       startDate = new Date(
         Date.now() - timeSpans[spanIndex].value * 60 * 60 * 1000
@@ -89,7 +91,6 @@ const SearchForm = ({ onSubmit }: Props) => {
 
   return (
     <form onSubmit={handleSubmit} className="m-3">
-      {/* channel name input */}
       <TextInput
         name="channelname"
         groupText="https://www.twitch.tv/"
@@ -100,7 +101,6 @@ const SearchForm = ({ onSubmit }: Props) => {
         Channelname
       </TextInput>
 
-      {/* time span input with predefined buttons + custom selection */}
       <TimeSpanInput
         spans={timeSpans}
         defaultSpan={getDefaultTimespan()}
@@ -109,7 +109,6 @@ const SearchForm = ({ onSubmit }: Props) => {
       ></TimeSpanInput>
 
       <div className="row ms-0">
-        {/* submit button */}
         <input
           type="submit"
           value="Search"
@@ -120,7 +119,6 @@ const SearchForm = ({ onSubmit }: Props) => {
           className="form-select col-md-auto w-auto ms-2"
           aria-label="select clips loading "
           name="ClipCount"
-          onChange={(e) => console.log(e.target.value)}
           defaultValue={clipsCountURL != undefined ? clipsCountURL : "20"}
         >
           <option value="20">20</option>
@@ -128,6 +126,7 @@ const SearchForm = ({ onSubmit }: Props) => {
           <option value="75">75</option>
           <option value="100">100</option>
         </select>
+
         <label
           htmlFor="ClipCount"
           className="col-md-auto form-label m-0 d-flex align-items-center"

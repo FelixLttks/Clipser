@@ -39,12 +39,12 @@ const Clips = ({
   hasMoreClips = true,
 }: Props) => {
   const [multiSelectEnabled, setMultiSelectEnabled] = useState(false);
-  const [selectionMode, setSelectionMode] = useState(0);
-  const [selected, setSelected] = useState<boolean[]>([]);
+  const [selectionMode, setSelectionMode] = useState(0); // index of selectin mode
+  const [selected, setSelected] = useState<boolean[]>([]); // boolean for each clip
   const [openInVODMode, setOpenInVODMode] = useState(true);
 
   useEffect(() => {
-    setSelected([...Array(clips.length).fill(false)]);
+    setSelected([...Array(clips.length).fill(false)]); // set every clip as unselected
   }, [multiSelectEnabled, selectionMode, searchForm]);
 
   const openClip = (index: number) => {
@@ -57,15 +57,13 @@ const Clips = ({
     } else {
       window.open(clip.url, "_blank");
     }
-    console.log(clips[index].title);
   };
 
   const handleOpenSelectedClick = () => {
+    // open clips so that the clip with the most views get open last and the user sees it fist
     for (let i = selected.length - 1; i >= 0; i--) {
       selected[i] && openClip(i);
     }
-
-    console.log("handleOpenSelectedClick");
   };
 
   return (

@@ -44,7 +44,7 @@ const TimeSpanInput = ({
 
   if (startDate == "" || endDate == "") {
     if (defaultSpan.index >= spans.length) {
-      // custom timespan
+      // custom timespan and at least one date is not set
       if (defaultSpan.startdate != "") {
         startDate = defaultSpan.startdate;
       } else {
@@ -75,53 +75,51 @@ const TimeSpanInput = ({
     setSelected(index);
   };
 
-  console.log(startDate);
-
   return (
-    <>
-      <div className="mb-3">
-        <label htmlFor="btn-group" className="form-label">
-          Select timespan
-        </label>
-        <div className="btn-toolbar ">
-          <ButtonGroup
-            items={[
-              ...spans.map((span) => span.text),
-              ...(hasCustom ? ["Custom"] : []),
-            ]}
-            selected={selected}
-            onChange={handleIndexChange}
-          ></ButtonGroup>
-          {selected === spans.length && (
-            <div className="input-group">
-              <DateInput
-                type="datetime-local"
-                defaultValue={covertUTCLocalTime(startDate)}
-                onChange={(local) => {
-                  startDate = covertLocalUTCTime(local);
-                  onChange(startDate, endDate, spans.length);
-                }}
-              ></DateInput>
-              <span className="input-group-text" id="basic-addon2">
-                to
-              </span>
-              <DateInput
-                type="datetime-local"
-                defaultValue={covertUTCLocalTime(endDate)}
-                onChange={(local) => {
-                  endDate = covertLocalUTCTime(local);
-                  onChange(startDate, endDate, spans.length);
-                }}
-              ></DateInput>
-            </div>
-          )}
-        </div>
+    <div className="mb-3">
+      <label htmlFor="btn-group" className="form-label">
+        Select timespan
+      </label>
+      <div className="btn-toolbar">
+        <ButtonGroup
+          items={[
+            ...spans.map((span) => span.text),
+            ...(hasCustom ? ["Custom"] : []), // add custom button element when needed
+          ]}
+          selected={selected}
+          onChange={handleIndexChange}
+        ></ButtonGroup>
 
-        <div className="form-text" id="basic-addon4">
-          Choose from which period the clips should be loaded
-        </div>
+        {/* custom range */}
+        {selected === spans.length && (
+          <div className="input-group">
+            <DateInput
+              type="datetime-local"
+              defaultValue={covertUTCLocalTime(startDate)}
+              onChange={(local) => {
+                startDate = covertLocalUTCTime(local);
+                onChange(startDate, endDate, spans.length);
+              }}
+            ></DateInput>
+            <span className="input-group-text" id="customRangeTo">
+              to
+            </span>
+            <DateInput
+              type="datetime-local"
+              defaultValue={covertUTCLocalTime(endDate)}
+              onChange={(local) => {
+                endDate = covertLocalUTCTime(local);
+                onChange(startDate, endDate, spans.length);
+              }}
+            ></DateInput>
+          </div>
+        )}
       </div>
-    </>
+
+      <div className="form-text" id="timespanHint">
+        Choose from which period the clips should be loaded
+      </div>
+    </div>
   );
 };
 

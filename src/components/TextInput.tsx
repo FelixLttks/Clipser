@@ -17,7 +17,7 @@ const TextInput = ({
 }: Props) => {
   return (
     <div className="input-group mb-3">
-      {groupText !== undefined && (
+      {groupText != undefined && (
         <span className="input-group-text" id="basic-addon1">
           {groupText}
         </span>
