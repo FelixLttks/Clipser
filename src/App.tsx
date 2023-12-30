@@ -1,10 +1,8 @@
 import { useState } from "react";
-import CookieConsent from "react-cookie-consent";
 import "./App.css";
 import Clips, { clip } from "./components/Clips";
 import SearchForm from "./components/SearchForm";
 import TwitchAPI from "./services/TwitchAPI";
-import { initGA } from "./utils/ga-utils";
 
 export type searchData = {
   channelname: string;
@@ -20,8 +18,6 @@ function App() {
   const [clips, setClips] = useState<clip[]>([]);
   const [error, setError] = useState(false);
   const [hasMoreClips, setHasMoreClips] = useState(true);
-
-  initGA("abc");
 
   const handleSubmit = (data: searchData, timespan: string) => {
     setSearchData(data);
@@ -64,9 +60,6 @@ function App() {
         hasError={error}
         hasMoreClips={hasMoreClips}
       ></Clips>
-      <CookieConsent enableDeclineButton>
-        This website uses cookies to enhance the user experience.
-      </CookieConsent>
     </div>
   );
 }
