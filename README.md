@@ -12,6 +12,8 @@ Discover an enhanced Twitch Clips viewer with a range of advanced features to el
 - Activate multiselect functionality.
 - Select from three distinct modes for optimal customization.
 
+![Alt text](preview.png)
+
 ## Tech-Stack
 
 written in React with typescript
