@@ -1,18 +1,16 @@
 # Clipser.me
 
-availible on [Clipser.me](https://Clipser.me)
+available on [Clipser.me](https://Clipser.me)
 
 ## About
 
-[Twitch](https://twitch.tv) Clips viewer with multiple advanced features.
+Discover an enhanced Twitch Clips viewer with a range of advanced features to elevate your viewing experience.
 
-These include:
-
-- search clips by (custom) date range
-- selct how many clips shoulb be loaded on each new search
-- change open mode
-- enable multiselct
-- choose between 3 selection modes
+- Search clips effortlessly by custom date range.
+- Choose the number of clips to load with each new search.
+- Flexible open mode options.
+- Activate multiselect functionality.
+- Select from three distinct modes for optimal customization.
 
 ## Tech-Stack
 
